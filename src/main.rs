@@ -7,7 +7,6 @@ extern crate chan;
 extern crate chan_signal;
 
 extern crate chrono;
-extern crate notify_rust;
 extern crate systemstat;
 
 use chan_signal::Signal;
