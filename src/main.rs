@@ -51,7 +51,7 @@ fn cpu(sys: &System) -> String {
 }
 
 fn date() -> String {
-    chrono::Local::now().format("📆 %a, %d %h ⸱ 🕓 %R").to_string()
+    chrono::Local::now().format("📆 %a, %d %h ⸱ 🕓 %T").to_string()
 }
 
 fn separated(s: String) -> String {
@@ -96,7 +96,7 @@ fn run(_sdone: chan::Sender<()>) {
             banner = next_banner;
             update_status(&banner);
         }
-        thread::sleep(Duration::from_millis(500));
+        thread::sleep(Duration::from_millis(100));
     }
 }
 
