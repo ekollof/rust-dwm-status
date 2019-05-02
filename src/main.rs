@@ -15,18 +15,18 @@ use systemstat::{Platform, System};
 fn plugged(sys: &System) -> String {
     if let Ok(plugged) = sys.on_ac_power() {
         if plugged {
-            "🔌 ✓".to_string()
+            "AC: ✓".to_string()
         } else {
-            "🔌 ✘".to_string()
+            "DC: ✘".to_string()
         }
     } else {
-        "🔌".to_string()
+        "UN: ?".to_string()
     }
 }
 
 fn battery(sys: &System) -> String {
     if let Ok(bat) = sys.battery_life() {
-        format!("🔋 {:.1}%", bat.remaining_capacity * 100.)
+        format!("BAT: {:.1}%", bat.remaining_capacity * 100.)
     } else {
         "".to_string()
     }
@@ -35,17 +35,26 @@ fn battery(sys: &System) -> String {
 fn ram(sys: &System) -> String {
     if let Ok(mem) = sys.memory() {
         let used = mem.total - mem.free;
-        format!("▯ {}", used)
+        format!("MEM: {}/{}", used, mem.total)
     } else {
         "▯ _".to_string()
     }
 }
 
 fn cpu(sys: &System) -> String {
-    if let Ok(load) = sys.load_average() {
-        format!("⚙ {:.2}", load.one)
+    if let Ok(cpu) = sys.load_average() {
+        format!("CPU: load: {:.2}",
+                cpu.one)
     } else {
-        "⚙ _".to_string()
+        "CPU: _".to_string()
+    }
+}
+
+fn cputemp(sys: &System) -> String {
+    if let Ok(cputemp) = sys.cpu_temp() {
+        format!("TEMP: {} C", cputemp)
+    } else {
+        "TEMP: _".to_string()
     }
 }
 
@@ -59,7 +68,7 @@ fn separated(s: String) -> String {
 
 fn status(sys: &System) -> String {
     separated(plugged(sys)) + &separated(battery(sys)) + &separated(ram(sys)) +
-    &separated(cpu(sys)) + &date()
+    &separated(cputemp(sys)) + &separated(cpu(sys)) + &date()
 }
 
 fn update_status(status: &String) {
